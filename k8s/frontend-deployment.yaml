@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - env:
+            - name: VITE_BACKEND_URL
+              value: https://paint.rasztabiga.me/api
+            - name: VITE_BACKEND_WS_URL
+              value: wss://paint.rasztabiga.me/api
+            - name: VITE_KEYCLOAK_TOKEN_URL
+              value: "https://paint.rasztabiga.me/keycloak/realms/SpringBootKeycloak/protocol/openid-connect/token"
+          image: ghcr.io/bartlomiejrasztabiga/paint/frontend
+          name: frontend
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      restartPolicy: Always
