@@ -19,21 +19,9 @@ spec:
             - name: VITE_BACKEND_WS_URL
               value: wss://paint.rasztabiga.me/api
             - name: VITE_KEYCLOAK_TOKEN_URL
-              value: "https://paint.rasztabiga.me/keycloak/realms/SpringBootKeycloak/protocol/openid-connect/token"
+              value: "https://keycloak-paint.rasztabiga.me/realms/paint/protocol/openid-connect/token"
           image: ghcr.io/bartlomiejrasztabiga/paint/frontend
           name: frontend
           ports:
-            - containerPort: 8080
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 10
+            - containerPort: 5173
       restartPolicy: Always

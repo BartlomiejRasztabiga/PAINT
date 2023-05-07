@@ -11,7 +11,7 @@ const convoParticipantsNames = (participantIds: string[], users: User[], exclude
 
   return participants.map((id: string) => {
     let user = users.find((user) => user.id === id);
-    return user ? user?.firstName + " " + user?.lastName : id;
+    return user ? user?.username : id;
   }).join(", ")
 }
 
@@ -23,7 +23,7 @@ const convoParticipantsNicknames = (participantIds: string[], users: User[], exc
 
   return participants.map((id: string) => {
     let user = users.find((user) => user.id === id);
-    return user ? "@" + user?.nickName : id;
+    return user ? "@" + user?.username : id;
   }).join(", ")
 }
 

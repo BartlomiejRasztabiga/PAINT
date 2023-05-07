@@ -1,4 +1,4 @@
-package pl.edu.pw.elka.slack.domain.users
+package pl.edu.pw.elka.slack.users
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
@@ -8,7 +8,6 @@ import java.util.*
 data class User(
     @Id
     val id: UUID,
-    val firstName: String,
-    val lastName: String,
-    val nickName: String
+    val username: String,
+    var status: UserStatus = UserStatus.OFFLINE,
 )

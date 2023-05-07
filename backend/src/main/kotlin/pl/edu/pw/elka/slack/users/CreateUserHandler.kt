@@ -1,4 +1,4 @@
-package pl.edu.pw.elka.slack.domain.users
+package pl.edu.pw.elka.slack.users
 
 import org.springframework.stereotype.Component
 import java.util.*
@@ -9,15 +9,17 @@ class CreateUserHandler(
 ) {
 
     fun createUser(command: CreateUserCommand): UUID {
-        val user = User(command.id, command.firstName, command.lastName, command.nickName)
+        if (userRepository.findByUsername(command.username) != null) {
+            throw Exception("User with username ${command.username} already exists")
+        }
+
+        val user = User(command.id, command.username)
         userRepository.save(user)
         return user.id
     }
 }
 
 data class CreateUserCommand(
-        val id: UUID,
-        val firstName: String,
-        val lastName: String,
-        val nickName: String
+    val id: UUID,
+    val username: String
 )

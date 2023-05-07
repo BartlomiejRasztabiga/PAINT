@@ -8,7 +8,7 @@ import java.util.*
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/conversations")
+@RequestMapping("/conversations")
 class ConversationController(
     private val createConversationHandler: CreateConversationHandler,
     private val conversationRepository: ConversationRepository
@@ -17,11 +17,11 @@ class ConversationController(
     @PostMapping
     fun createConversation(@RequestBody command: CreateConversationCommand): UUID {
         val currentUserId = UUID.fromString(((SecurityContextHolder.getContext().authentication as KeycloakAuthenticationToken).principal as Principal).name)
-        command.userIds.plus(currentUserId)
-        if (command.userIds.size < 2) {
+        val usersIds = command.userIds.plus(currentUserId)
+        if (usersIds.size < 2) {
             throw IllegalStateException("Conversation must have at least 2 users")
         }
-        return createConversationHandler.create(command)
+        return createConversationHandler.create(CreateConversationCommand(command.name, usersIds))
     }
 
     @GetMapping

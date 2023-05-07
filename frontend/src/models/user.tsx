@@ -1,8 +1,6 @@
 type User = {
   id: string,
-  nickName: string,
-  firstName: string,
-  lastName: string,
+  username: string,
   status: UserStatus,
 }
 

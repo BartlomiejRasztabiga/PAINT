@@ -29,9 +29,8 @@ export default function UserControlPanel() {
         <div className='flex flex-row items-center justify-start w-full'>
           <ActivityIndicator userStatus={user!.status}/>
           <div className='flex flex-col items-start justify-center ml-2'>
-            <p className="font-semibold">{user?.firstName} {user?.lastName}</p>
-            <p className="text-base-content/50 text-sm font-normal -mt-1">
-              @{user?.nickName}
+            <p className="text-base-content/50 text-base font-normal -mt-1">
+              @{user?.username}
             </p>
           </div>
         </div>

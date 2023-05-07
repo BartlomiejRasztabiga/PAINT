@@ -14,20 +14,31 @@ export default function MessagesView() {
   const currentUser = useDashboardStore(state => state.currentUser)
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const [enteredMessage, setEnteredMessage] = useState("")
+  const [file, setFile] = useState<File>();
   const { selectedConversation, setSelectedConversation, reset: dashboardStoreReset } = useDashboardStore()
   const users = useGetUsers();
 
   const messages = useGetMessages(selectedConversation?.id);
   const sendMessage = useSendMessage();
 
+  const fileInputRef = useRef(null)
+
   const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     let trimmedMessage = enteredMessage.trim();
-    if (!trimmedMessage) return;
+    if (!trimmedMessage && !file) return;
 
-    sendMessage.mutate({ conversationId: selectedConversation!.id, content: enteredMessage });
+    sendMessage.mutate({ conversationId: selectedConversation!.id, content: enteredMessage, file: file });
     setEnteredMessage("");
+    setFile(undefined);
+
+    // @ts-ignore
+    fileInputRef.current.value = null;
+  }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFile(event.target.files![0]);
   }
 
   useEffect(() => {
@@ -71,8 +82,11 @@ export default function MessagesView() {
         <div className="flex-1"></div>
         {messages.data!.map((message: Message) => {
           return (
-            <div key={message.id} className={`chat ${message.authorId === currentUser?.id ? "chat-end" : "chat-start"}`}>
-              <div className={`chat-bubble ${message.authorId === currentUser?.id ? "chat-bubble-primary" : ""}`}>{message.content}</div>
+            <div key={message.id} className={`chat ${message.authorId === currentUser?.id ? "chat-end" : "chat-start"} `}>
+              <div className={"chat-header"}>{message.authorName}</div>
+              <div className={`chat-bubble ${message.authorId === currentUser?.id ? "chat-bubble-primary" : ""}`}>
+                {message.content.includes("http") ? <a className={"link"} href={message.content} target={"_blank"}>{message.content}</a> : message.content}
+              </div>
             </div>
           )
         })}
@@ -81,6 +95,7 @@ export default function MessagesView() {
       <form onSubmit={handleSendMessage} id="dashboard-send__message" className="flex flex-row flex-2 items-center p-2 bg-base-300">
         <div className="input-group">
           <input type="text" placeholder="Type your message" className="input input-bordered w-full" value={enteredMessage} onChange={event => setEnteredMessage(event.target.value)} />
+          <input ref={fileInputRef} className="file-input file-input-bordered file-input-primary max-w-xs" type="file" onChange={handleFileChange}/>
           <button className="btn btn-secondary gap-2">
             Send
             <PaperAirplaneIcon className="w-5 h-5" />

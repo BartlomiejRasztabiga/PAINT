@@ -14,20 +14,17 @@ spec:
     spec:
       containers:
         - env:
-            - name: SPRING_DATA_MONGODB_HOST
-              value: db
-            - name: SPRING_DATA_MONGODB_PORT
-              value: "27017"
-            - name: SPRING_DATA_MONGODB_DATABASE
-              value: paint
-            - name: SPRING_DATA_MONGODB_USERNAME
-              value: root
-            - name: SPRING_DATA_MONGODB_PASSWORD
-              value: password
-            - name: SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE
-              value: admin
+            - name: SPRING_DATA_MONGODB_URI
+              value: "mongodb://root:password@db:27017/paint?authSource=admin"
           image: ghcr.io/bartlomiejrasztabiga/paint/backend
           name: backend
           ports:
             - containerPort: 8080
+          volumeMounts:
+            - mountPath: /uploads
+              name: uploads
       restartPolicy: Always
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: backend-data

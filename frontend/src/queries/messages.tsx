@@ -12,14 +12,26 @@ const fetchMessages = async (conversationId: string | undefined) => {
 
 interface PostMessageParams {
   conversationId: string,
-  content: string,
+  content?: string,
+  file?: File,
 }
 
-const postMessage = async ({ conversationId, content }: PostMessageParams) => {
-  await apiAxios.post(
-    `/conversation/${conversationId}/messages`, {
-    "content": content
-  })
+const postMessage = async ({ conversationId, content, file }: PostMessageParams) => {
+  if (file) {
+    const formData = new FormData()
+    formData.append('file', file)
+    await apiAxios.post(
+      `/conversation/${conversationId}/files`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  } else {
+    await apiAxios.post(
+        `/conversation/${conversationId}/messages`, {
+          "content": content
+        })
+  }
 }
 
 const useGetMessages = (conversationId: string | undefined) => useQuery('messages', () => fetchMessages(conversationId), {

@@ -16,8 +16,7 @@ function ConversationParticipantEntry({ user, status, removeCallback }: Conversa
     <div className="flex flex-row gap-2 items-center px-4 py-2 rounded-3xl bg-base-100/75">
       <ActivityIndicator userStatus={user.status}/>
       <div className="flex flex-col -mt-1">
-        <p className="font-bold">{user.firstName} {user.lastName}</p>
-        <p className="text-xs -mt-1 text-base-content/75">@{user.nickName}</p>
+        <p className="text-base -mt-1 text-base-content/75">@{user.username}</p>
       </div>
       {removeCallback && <button className="btn btn-sm opacity-50 btn-circle ml-2 -mr-1" onClick={() => removeCallback()}>✕</button>}
     </div>
@@ -58,7 +57,7 @@ export default function ConversationCreationModal() {
 
   let filteredUsers = users.data?.filter((user) => user.id !== currentUser?.id && !participants.includes(user));
   if (usersFilter) {
-    filteredUsers = filteredUsers?.filter((user) => user.firstName.toLowerCase().includes(usersFilter.toLowerCase()) || user.lastName.toLowerCase().includes(usersFilter.toLowerCase()) || user.nickName.toLowerCase().includes(usersFilter.toLowerCase()));
+    filteredUsers = filteredUsers?.filter((user) => user.username.toLowerCase().includes(usersFilter.toLowerCase()));
   }
 
   let participantIds = participants.map((user) => user.id);
@@ -93,8 +92,7 @@ export default function ConversationCreationModal() {
                     <div className='flex flex-row gap-2 items-center'>
                       <ActivityIndicator userStatus={user.status}/>
                       <div className="flex flex-col -mt-1">
-                        <p className="font-bold">{user.firstName} {user.lastName}</p>
-                        <p className="text-sm -mt-1 text-base-content/75">@{user.nickName}</p>
+                        <p className="text-base -mt-1 text-base-content/75">@{user.username}</p>
                       </div>
                     </div>
                     <button className="btn btn-md btn-outline btn-accent opacity-75" onClick={() => setParticipants([...participants, user])}>Add</button>
